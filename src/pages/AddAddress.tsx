@@ -27,8 +27,23 @@ export default function AddNewAddress() {
     }),
 
     onSubmit: (values) => {
-      console.log("Address Data:", values);
+      // Convert into CheckoutStep1-compatible format
+      const newAddress = {
+        id: Date.now().toString(), // unique ID
+        name: values.fullName,
+        line1: `${values.address}, ${values.city}, ${values.state} - ${values.pincode}`,
+        phone: values.phone,
+      };
+
+      const stored = JSON.parse(localStorage.getItem("addresses") || "[]");
+
+      stored.push(newAddress);
+
+      localStorage.setItem("addresses", JSON.stringify(stored));
+
       alert("Address Saved Successfully!");
+
+      window.location.href = "/checkout/address";
     },
   });
 
@@ -55,7 +70,6 @@ export default function AddNewAddress() {
             gridTemplateColumns: "1fr 1fr",
             gap: "20px",
           }}>
-
           <div>
             <input
               type="text"
@@ -63,8 +77,11 @@ export default function AddNewAddress() {
               placeholder="Full Name"
               onChange={formik.handleChange}
               value={formik.values.fullName}
-              style={inputStyle}/>
-            <p style={errorStyle}>{formik.touched.fullName && formik.errors.fullName}</p>
+              style={inputStyle}
+            />
+            <p style={errorStyle}>
+              {formik.touched.fullName && formik.errors.fullName}
+            </p>
 
             <input
               type="text"
@@ -73,7 +90,9 @@ export default function AddNewAddress() {
               onChange={formik.handleChange}
               value={formik.values.city}
               style={inputStyle}/>
-            <p style={errorStyle}>{formik.touched.city && formik.errors.city}</p>
+            <p style={errorStyle}>
+              {formik.touched.city && formik.errors.city}
+            </p>
 
             <input
               type="text"
@@ -81,8 +100,10 @@ export default function AddNewAddress() {
               placeholder="Pincode"
               onChange={formik.handleChange}
               value={formik.values.pincode}
-              style={inputStyle}/>
-            <p style={errorStyle}>{formik.touched.pincode && formik.errors.pincode}</p>
+              style={inputStyle} />
+            <p style={errorStyle}>
+              {formik.touched.pincode && formik.errors.pincode}
+            </p>
           </div>
 
           <div>
@@ -93,7 +114,9 @@ export default function AddNewAddress() {
               onChange={formik.handleChange}
               value={formik.values.address}
               style={inputStyle}/>
-            <p style={errorStyle}>{formik.touched.address && formik.errors.address}</p>
+            <p style={errorStyle}>
+              {formik.touched.address && formik.errors.address}
+            </p>
 
             <input
               type="text"
@@ -102,7 +125,9 @@ export default function AddNewAddress() {
               onChange={formik.handleChange}
               value={formik.values.state}
               style={inputStyle}/>
-            <p style={errorStyle}>{formik.touched.state && formik.errors.state}</p>
+            <p style={errorStyle}>
+              {formik.touched.state && formik.errors.state}
+            </p>
 
             <input
               type="text"
@@ -111,7 +136,9 @@ export default function AddNewAddress() {
               onChange={formik.handleChange}
               value={formik.values.phone}
               style={inputStyle}/>
-            <p style={errorStyle}>{formik.touched.phone && formik.errors.phone}</p>
+            <p style={errorStyle}>
+              {formik.touched.phone && formik.errors.phone}
+            </p>
           </div>
         </div>
 
