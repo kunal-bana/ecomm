@@ -5,12 +5,16 @@ import { removeFromWishlist } from "../redux/wishlistSlice";
 import { addToCart } from "../redux/cartSlice";
 import { Box, Typography, Paper, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import ToastMessage from "../components/ToastMessage";
 
 export default function Wishlist() {
   const wishlist = useSelector((s: RootState) => s.wishlist.items);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const mode = useSelector((s: RootState) => s.theme.mode);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [toastProduct, setToastProduct] = useState<any>(null);
 
   return (
     <Box sx={{ p: 3, minHeight: "80vh" }}>
@@ -101,7 +105,9 @@ export default function Wishlist() {
                   bgcolor: mode === "light" ? "black" : "white",
                   color: mode === "light" ? "white" : "black",
                 }}
-                onClick={() => dispatch(addToCart(p))}
+                onClick={() => {dispatch(addToCart(p));
+                  setToastProduct(p);        
+                  setToastOpen(true); }}
                 variant="contained"
                 size="small">
                 Move to Cart
@@ -117,6 +123,13 @@ export default function Wishlist() {
             </Box>
           </Paper>
         ))}
+      {toastProduct && (
+        <ToastMessage
+        open={toastOpen}
+        onClose={() => setToastOpen(false)}
+        productName={toastProduct.title}
+        message="Moved to cart"/>
+        )}
     </Box>
   );
 }

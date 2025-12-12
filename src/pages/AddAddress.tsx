@@ -27,7 +27,6 @@ export default function AddNewAddress() {
     }),
 
     onSubmit: (values) => {
-      // Convert into CheckoutStep1-compatible format
       const newAddress = {
         id: Date.now().toString(), // unique ID
         name: values.fullName,

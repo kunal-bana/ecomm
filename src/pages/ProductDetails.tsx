@@ -19,6 +19,7 @@ import { addToWishlist } from "../redux/wishlistSlice";
 import { addReview } from "../redux/reviewSlice";
 
 import { fetchProductDetails } from "../redux/productSlice";
+import ToastMessage from "../components/ToastMessage";
 
 export default function ProductDetails() {
   const { id } = useParams();
@@ -42,6 +43,11 @@ export default function ProductDetails() {
   const [selectedColor, setSelectedColor] = useState<string | null>(null);
   const [selectedWarranty, setSelectedWarranty] = useState<string | null>(null);
   const [selectedPlating, setSelectedPlating] = useState<string | null>(null);
+  const [toastOpen, setToastOpen] = useState(false);
+  const [wishlistToast, setWishlistToast] = useState(false);
+  const [wishlistProduct, setWishlistProduct] = useState<any>(null);
+
+
 
   const getImage = (img: string | string[]) =>
     Array.isArray(img) ? img[0] : img;
@@ -90,8 +96,8 @@ export default function ProductDetails() {
         warranty: selectedWarranty,
         plating: selectedPlating,
         image: getImage(product.image),
-      } as any)
-    );
+      } as any));
+    setToastOpen(true);
   };
 
   const handleWishlist = () => {
@@ -103,8 +109,9 @@ export default function ProductDetails() {
         warranty: selectedWarranty,
         plating: selectedPlating,
         image: getImage(product.image),
-      } as any)
-    );
+      } as any));
+      setWishlistProduct(product); 
+      setWishlistToast(true); 
   };
 
   const initials = (name: string) =>
@@ -240,6 +247,17 @@ export default function ProductDetails() {
               BUY NOW
             </Button>
           </Stack>
+          <ToastMessage
+          open={toastOpen}
+          onClose={() => setToastOpen(false)}
+          productName={product.title}
+          message="Item added to cart!" />
+          {wishlistProduct && (
+          <ToastMessage
+          open={wishlistToast}
+          onClose={() => setWishlistToast(false)}
+          productName={wishlistProduct.title}
+          message="Added to wishlist"/>)}
         </Box>
       </Box>
 
