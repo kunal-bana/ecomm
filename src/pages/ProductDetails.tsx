@@ -47,8 +47,6 @@ export default function ProductDetails() {
   const [wishlistToast, setWishlistToast] = useState(false);
   const [wishlistProduct, setWishlistProduct] = useState<any>(null);
 
-
-
   const getImage = (img: string | string[]) =>
     Array.isArray(img) ? img[0] : img;
 
@@ -96,7 +94,8 @@ export default function ProductDetails() {
         warranty: selectedWarranty,
         plating: selectedPlating,
         image: getImage(product.image),
-      } as any));
+      } as any)
+    );
     setToastOpen(true);
   };
 
@@ -109,9 +108,10 @@ export default function ProductDetails() {
         warranty: selectedWarranty,
         plating: selectedPlating,
         image: getImage(product.image),
-      } as any));
-      setWishlistProduct(product); 
-      setWishlistToast(true); 
+      } as any)
+    );
+    setWishlistProduct(product);
+    setWishlistToast(true);
   };
 
   const initials = (name: string) =>
@@ -122,14 +122,30 @@ export default function ProductDetails() {
       .toUpperCase();
 
   return (
-    <Box sx={{ p: 4, pt: 12 }}>
-      <Box sx={{ display: "flex", gap: 4, flexWrap: "wrap" }}>
-        <Paper sx={{ p: 2, borderRadius: 2 }}>
+    <Box
+      sx={{
+        px: { xs: 2, md: 4 },
+        pt: { xs: 18, md: 12 },
+        maxWidth: "1400px",
+        mx: "auto",
+      }}
+    >
+      {/* MAIN PRODUCT */}
+      <Box
+        sx={{
+          display: "flex",
+          gap: { xs: 3, md: 4 },
+          flexWrap: "wrap",
+          flexDirection: { xs: "column", md: "row" },
+        }}
+      >
+        <Paper sx={{ p: 2, borderRadius: 2, alignSelf: "flex-start" }}>
           <img
             src={getImage(product.image)}
             alt={product.title}
             style={{
-              width: 350,
+              width: "100%",
+              maxWidth: 350,
               height: "auto",
               objectFit: "contain",
               borderRadius: 8,
@@ -137,7 +153,7 @@ export default function ProductDetails() {
           />
         </Paper>
 
-        <Box sx={{ maxWidth: 600 }}>
+        <Box sx={{ maxWidth: 600, width: "100%" }}>
           <Typography variant="h5" fontWeight={700}>
             {product.title}
           </Typography>
@@ -167,7 +183,8 @@ export default function ProductDetails() {
                   <Button
                     key={s}
                     onClick={() => setSelectedSize(s)}
-                    sx={selectorButton(selectedSize === s)}>
+                    sx={selectorButton(selectedSize === s)}
+                  >
                     {s}
                   </Button>
                 ))}
@@ -181,7 +198,8 @@ export default function ProductDetails() {
                   <Button
                     key={c}
                     onClick={() => setSelectedColor(c)}
-                    sx={selectorButton(selectedColor === c)}>
+                    sx={selectorButton(selectedColor === c)}
+                  >
                     {c}
                   </Button>
                 ))}
@@ -199,7 +217,8 @@ export default function ProductDetails() {
                   <Button
                     key={w}
                     onClick={() => setSelectedWarranty(w)}
-                    sx={selectorButton(selectedWarranty === w)}>
+                    sx={selectorButton(selectedWarranty === w)}
+                  >
                     {w}
                   </Button>
                 ))}
@@ -217,7 +236,8 @@ export default function ProductDetails() {
                   <Button
                     key={p}
                     onClick={() => setSelectedPlating(p)}
-                    sx={selectorButton(selectedPlating === p)}>
+                    sx={selectorButton(selectedPlating === p)}
+                  >
                     {p}
                   </Button>
                 ))}
@@ -225,42 +245,56 @@ export default function ProductDetails() {
             </>
           )}
 
-          <Stack direction="row" spacing={2} mt={4}>
+          {/* ACTION BUTTONS */}
+          <Stack
+            direction={{ xs: "column", sm: "row" }}
+            spacing={2}
+            mt={4}
+          >
             <Button
               variant="contained"
               sx={{ bgcolor: "black", color: "white", borderRadius: 2 }}
-              onClick={handleAdd}>
+              onClick={handleAdd}
+            >
               ADD TO CART
             </Button>
 
             <Button
               variant="outlined"
               sx={{ borderRadius: 2 }}
-              onClick={handleWishlist}>
+              onClick={handleWishlist}
+            >
               WISHLIST
             </Button>
 
             <Button
               variant="contained"
               sx={{ bgcolor: "black", color: "white", borderRadius: 2 }}
-              onClick={handleAdd}>
+              onClick={handleAdd}
+            >
               BUY NOW
             </Button>
           </Stack>
+
           <ToastMessage
-          open={toastOpen}
-          onClose={() => setToastOpen(false)}
-          productName={product.title}
-          message="Item added to cart!" />
+            open={toastOpen}
+            onClose={() => setToastOpen(false)}
+            productName={product.title}
+            message="Item added to cart!"
+          />
+
           {wishlistProduct && (
-          <ToastMessage
-          open={wishlistToast}
-          onClose={() => setWishlistToast(false)}
-          productName={wishlistProduct.title}
-          message="Added to wishlist"/>)}
+            <ToastMessage
+              open={wishlistToast}
+              onClose={() => setWishlistToast(false)}
+              productName={wishlistProduct.title}
+              message="Added to wishlist"
+            />
+          )}
         </Box>
       </Box>
 
+      {/* REVIEWS */}
       <Box sx={{ mt: 6 }}>
         <Typography variant="h6" fontWeight={700}>
           Customer Reviews
@@ -271,7 +305,7 @@ export default function ProductDetails() {
         <Stack spacing={2} mt={2}>
           {reviews.map((r, i) => (
             <Paper key={i} sx={{ p: 2, borderRadius: 2 }}>
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+              <Box sx={{ display: "flex", gap: 2 }}>
                 <Avatar>{initials(r.user)}</Avatar>
                 <Box>
                   <Typography fontWeight={700}>{r.user}</Typography>
@@ -291,7 +325,8 @@ export default function ProductDetails() {
           <Rating
             value={rating}
             onChange={(e, v) => setRating(v || 0)}
-            sx={{ mt: 1 }}/>
+            sx={{ mt: 1 }}
+          />
           <TextField
             fullWidth
             multiline
@@ -299,7 +334,8 @@ export default function ProductDetails() {
             sx={{ mt: 2 }}
             placeholder="Write your review..."
             value={reviewText}
-            onChange={(e) => setReviewText(e.target.value)}/>
+            onChange={(e) => setReviewText(e.target.value)}
+          />
           <Button
             variant="contained"
             sx={{ mt: 2, bgcolor: "black", color: "white", borderRadius: 2 }}
@@ -313,12 +349,14 @@ export default function ProductDetails() {
                   date: new Date().toLocaleString(),
                 })
               )
-            }>
+            }
+          >
             SUBMIT REVIEW
           </Button>
         </Box>
       </Box>
 
+      {/* SIMILAR PRODUCTS */}
       <Box sx={{ mt: 6 }}>
         <Typography variant="h6" fontWeight={700}>
           Similar Products
@@ -330,9 +368,10 @@ export default function ProductDetails() {
             gap: 2,
             mt: 2,
             overflowX: "auto",
-            paddingBottom: 2,
-            paddingTop: 2,
-          }}>
+            pb: 2,
+            "&::-webkit-scrollbar": { display: "none" },
+          }}
+        >
           {similarProducts.map((sp) => (
             <Paper
               key={sp.id}
@@ -342,10 +381,12 @@ export default function ProductDetails() {
                 borderRadius: 2,
                 cursor: "pointer",
                 "&:hover": {
-                    boxShadow: 2,
-                    transform: "scale(1.03)" },
+                  boxShadow: 2,
+                  transform: "scale(1.03)",
+                },
               }}
-              onClick={() => navigate(`/product/${sp.id}`)}>
+              onClick={() => navigate(`/product/${sp.id}`)}
+            >
               <img
                 src={getImage(sp.image)}
                 alt={sp.title}
@@ -354,8 +395,8 @@ export default function ProductDetails() {
                   height: 140,
                   objectFit: "contain",
                   padding: 10,
-                }}/>
-
+                }}
+              />
               <Typography
                 fontWeight={700}
                 sx={{
@@ -364,18 +405,25 @@ export default function ProductDetails() {
                   whiteSpace: "nowrap",
                   overflow: "hidden",
                   textOverflow: "ellipsis",
-                }}>
+                }}
+              >
                 {sp.title}
               </Typography>
-
               <Typography fontWeight={700} mt={0.5}>
                 ₹{sp.price}
               </Typography>
               <Button
-              variant="contained"
-              fullWidth
-              sx={{ mt: 2, bgcolor: "black", color: "white", borderRadius: 2, }}
-              onClick={() => navigate(`/product/${sp.id}`)}>BUY NOW</Button>
+                fullWidth
+                variant="contained"
+                sx={{
+                  mt: 2,
+                  bgcolor: "black",
+                  color: "white",
+                  borderRadius: 2,
+                }}
+              >
+                BUY NOW
+              </Button>
             </Paper>
           ))}
         </Box>

@@ -32,11 +32,16 @@ export default function CartPage() {
       sx={{
         display: "flex",
         justifyContent: "center",
-        gap: 4,
-        p: { xs: 1, md: 4 },
+        gap: { xs: 2, md: 4 },
+        px: { xs: 1.5, md: 4 },
+        pt: { xs: 10, md: 12 }, 
+        pb: 4,
         flexWrap: "wrap",
-      }}>
-      <Box sx={{ flex: 1, minWidth: 350, marginTop: "50px" }}>
+        maxWidth: "1400px",
+        mx: "auto",
+      }}
+    >
+      <Box sx={{ flex: 1, minWidth: { xs: "100%", md: 350 } }}>
         {cart.length === 0 ? (
           <Box
             sx={{
@@ -46,11 +51,13 @@ export default function CartPage() {
               alignItems: "center",
               textAlign: "center",
               width: "100%",
-            }}>
+            }}
+          >
             <img
               src="/upi/empty.png"
               alt="empty-cart"
-              style={{ width: 150, marginBottom: 20 }}/>
+              style={{ width: 150, marginBottom: 20 }}
+            />
 
             <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
               Hey, it feels so light!
@@ -74,7 +81,8 @@ export default function CartPage() {
                   color: "#3949ab",
                 },
               }}
-              onClick={() => navigate("/wishlist")}>
+              onClick={() => navigate("/wishlist")}
+            >
               ADD ITEMS FROM WISHLIST
             </Button>
           </Box>
@@ -83,6 +91,7 @@ export default function CartPage() {
             <Typography variant="h5" sx={{ mb: 2, fontWeight: 700 }}>
               Shopping Cart
             </Typography>
+
             {cart.map((item) => (
               <Paper
                 key={item.id}
@@ -90,10 +99,12 @@ export default function CartPage() {
                   p: 2,
                   mb: 2,
                   display: "flex",
-                  alignItems: "center",
+                  alignItems: { xs: "flex-start", sm: "center" },
                   gap: 2,
                   borderRadius: 2,
-                }}>
+                  flexDirection: { xs: "column", sm: "row" }, 
+                }}
+              >
                 <img
                   src={item.image}
                   alt={item.title}
@@ -102,7 +113,8 @@ export default function CartPage() {
                     height: 80,
                     objectFit: "contain",
                     borderRadius: 8,
-                  }}/>
+                  }}
+                />
 
                 <Box sx={{ flex: 1 }}>
                   <Typography fontWeight={600}>{item.title}</Typography>
@@ -110,18 +122,28 @@ export default function CartPage() {
                     ₹{item.price}
                   </Typography>
 
-                  <Box sx={{ display: "flex", alignItems: "center", mt: 1 }}>
+                  <Box
+                    sx={{
+                      display: "flex",
+                      alignItems: "center",
+                      mt: 1,
+                    }}
+                  >
                     <IconButton
                       onClick={() => dispatch(decreaseQty(item.id))}
-                      size="small">
+                      size="small"
+                    >
                       <RemoveIcon />
                     </IconButton>
 
-                    <Typography sx={{ mx: 1 }}>{item.quantity}</Typography>
+                    <Typography sx={{ mx: 1 }}>
+                      {item.quantity}
+                    </Typography>
 
                     <IconButton
                       onClick={() => dispatch(increaseQty(item.id))}
-                      size="small">
+                      size="small"
+                    >
                       <AddIcon />
                     </IconButton>
                   </Box>
@@ -129,32 +151,37 @@ export default function CartPage() {
 
                 <IconButton
                   onClick={() => dispatch(removeFromCart(item.id))}
-                  size="small">
+                  size="small"
+                >
                   <CloseIcon />
                 </IconButton>
               </Paper>
             ))}
+
             <FrequentlyBoughtTogether />
           </>
         )}
       </Box>
+
       {cart.length > 0 && (
         <Paper
           sx={{
-            width: 330,
-            height: "fit-content",
+            width: { xs: "100%", md: 330 },
             p: 3,
             borderRadius: 2,
             position: { md: "sticky" },
-            top: 90,
-            marginTop: "100px",
-          }}>
+            top: { md: 90 },
+            mt: { xs: 1, md: 0 }, 
+          }}
+        >
           <Typography variant="h6" sx={{ fontWeight: 700, mb: 2 }}>
             Order Summary
           </Typography>
 
           <Box sx={{ mb: 2 }}>
-            <Typography sx={{ opacity: 0.6 }}>Discount Code</Typography>
+            <Typography sx={{ opacity: 0.6 }}>
+              Discount Code
+            </Typography>
             <Paper
               sx={{
                 display: "flex",
@@ -162,7 +189,8 @@ export default function CartPage() {
                 p: 1,
                 mt: 1,
                 borderRadius: 2,
-              }}>
+              }}
+            >
               <input
                 placeholder="Enter code"
                 style={{
@@ -193,7 +221,8 @@ export default function CartPage() {
               bgcolor: mode === "light" ? "black" : "white",
               color: mode === "light" ? "white" : "black",
             }}
-            onClick={() => navigate("/checkout/address")}>
+            onClick={() => navigate("/checkout/address")}
+          >
             Checkout
           </Button>
         </Paper>
@@ -216,11 +245,19 @@ function SummaryRow({
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", py: 1 }}>
       <Typography
-        sx={{ fontSize: larger ? 18 : 14, fontWeight: bold ? 700 : 400 }}>
+        sx={{
+          fontSize: larger ? 18 : 14,
+          fontWeight: bold ? 700 : 400,
+        }}
+      >
         {label}
       </Typography>
       <Typography
-        sx={{ fontSize: larger ? 18 : 14, fontWeight: bold ? 700 : 400 }}>
+        sx={{
+          fontSize: larger ? 18 : 14,
+          fontWeight: bold ? 700 : 400,
+        }}
+      >
         {value}
       </Typography>
     </Box>

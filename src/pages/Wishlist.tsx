@@ -1,11 +1,10 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "../redux/store";
 import { removeFromWishlist } from "../redux/wishlistSlice";
 import { addToCart } from "../redux/cartSlice";
 import { Box, Typography, Paper, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
 import ToastMessage from "../components/ToastMessage";
 
 export default function Wishlist() {
@@ -13,29 +12,36 @@ export default function Wishlist() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const mode = useSelector((s: RootState) => s.theme.mode);
+
   const [toastOpen, setToastOpen] = useState(false);
   const [toastProduct, setToastProduct] = useState<any>(null);
 
   return (
-    <Box sx={{ p: 3, minHeight: "80vh" }}>
-      <Typography variant="h5" mb={3} fontWeight={700}>
-        Wishlist
-      </Typography>
-
+    <Box
+      sx={{
+        px: { xs: 1.5, md: 3 },
+        pt: { xs: 10, md: 12 }, 
+        minHeight: "80vh",
+        maxWidth: "1200px",
+        mx: "auto",
+      }}>
       {wishlist.length === 0 && (
         <Box
           sx={{
             mt: 8,
+            p: { xs: 1, md: 4 },
             display: "flex",
             flexDirection: "column",
             alignItems: "center",
             textAlign: "center",
             opacity: mode === "light" ? 1 : 0.9,
-          }}>
+          }}
+        >
           <img
             src="/upi/wishlist.png"
             alt="empty"
-            style={{ width: 120, marginBottom: 20 }}/>
+            style={{ width: 120, marginBottom: 20 }}
+          />
 
           <Typography variant="h6" fontWeight={700} sx={{ mb: 1 }}>
             YOUR WISHLIST IS EMPTY
@@ -59,7 +65,8 @@ export default function Wishlist() {
                 color: "#3949ab",
               },
             }}
-            onClick={() => navigate("/")}>
+            onClick={() => navigate("/")}
+          >
             CONTINUE SHOPPING
           </Button>
         </Box>
@@ -70,14 +77,16 @@ export default function Wishlist() {
           <Paper
             key={p.id}
             sx={{
-              p: 2,
+              p: { xs: 1.5, md: 2 },
               mb: 2,
               display: "flex",
-              alignItems: "center",
+              alignItems: { xs: "flex-start", sm: "center" },
               gap: 2,
               borderRadius: 2,
               boxShadow: 3,
-            }}>
+              flexDirection: { xs: "column", sm: "row" }, 
+            }}
+          >
             <img
               src={p.image}
               alt={p.title}
@@ -86,7 +95,8 @@ export default function Wishlist() {
                 height: 80,
                 objectFit: "contain",
                 borderRadius: 8,
-              }}/>
+              }}
+            />
 
             <Box sx={{ flex: 1 }}>
               <Typography fontWeight={700} sx={{ mb: 0.5 }}>
@@ -94,42 +104,60 @@ export default function Wishlist() {
               </Typography>
               <Typography
                 fontSize={16}
-                sx={{ color: mode === "light" ? "black" : "white" }}>
+                sx={{ color: mode === "light" ? "black" : "white" }}
+              >
                 ₹{p.price}
               </Typography>
             </Box>
 
-            <Box sx={{ display: "flex", gap: 1 }}>
+            <Box
+              sx={{
+                display: "flex",
+                gap: 1,
+                flexDirection: { xs: "column", sm: "row" },
+                width: { xs: "100%", sm: "auto" },
+              }}
+            >
               <Button
                 sx={{
                   bgcolor: mode === "light" ? "black" : "white",
                   color: mode === "light" ? "white" : "black",
+                  width: { xs: "100%", sm: "auto" },
                 }}
-                onClick={() => {dispatch(addToCart(p));
-                  setToastProduct(p);        
-                  setToastOpen(true); }}
+                onClick={() => {
+                  dispatch(addToCart(p));
+                  setToastProduct(p);
+                  setToastOpen(true);
+                }}
                 variant="contained"
-                size="small">
+                size="small"
+              >
                 Move to Cart
               </Button>
 
               <Button
-                sx={{ color: mode === "light" ? "black" : "white" }}
+                sx={{
+                  color: mode === "light" ? "black" : "white",
+                  width: { xs: "100%", sm: "auto" },
+                }}
                 onClick={() => dispatch(removeFromWishlist(p.id))}
                 variant="outlined"
-                size="small">
+                size="small"
+              >
                 Remove
               </Button>
             </Box>
           </Paper>
         ))}
+
       {toastProduct && (
         <ToastMessage
-        open={toastOpen}
-        onClose={() => setToastOpen(false)}
-        productName={toastProduct.title}
-        message="Moved to cart"/>
-        )}
+          open={toastOpen}
+          onClose={() => setToastOpen(false)}
+          productName={toastProduct.title}
+          message="Moved to cart"
+        />
+      )}
     </Box>
   );
 }
