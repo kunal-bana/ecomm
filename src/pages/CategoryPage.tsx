@@ -1,4 +1,4 @@
-import {useState } from "react";
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import {
   Box,
@@ -11,9 +11,12 @@ import {
   Divider,
   FormControlLabel,
   Checkbox,
+  Drawer,
+  Stack,
 } from "@mui/material";
 import { useSelector } from "react-redux";
 import { RootState } from "../redux/store";
+import FilterListIcon from '@mui/icons-material/FilterList';
 
 export default function CategoryPage() {
   const { name } = useParams();
@@ -31,6 +34,8 @@ export default function CategoryPage() {
   const [search, setSearch] = useState("");
   const [discountFilter, setDiscountFilter] = useState(false);
 
+  const [mobileFilterOpen, setMobileFilterOpen] = useState(false);
+
   const getImage = (img: string | string[]) =>
     Array.isArray(img) ? img[0] : img;
 
@@ -38,15 +43,10 @@ export default function CategoryPage() {
     const rating = (p as any)?.rating?.rate || 0;
     const count = (p as any)?.rating?.count || 0;
 
-    const meetsCategory =
-      p.category.toLowerCase() === decodedName.toLowerCase();
-
+    const meetsCategory = p.category.toLowerCase() === decodedName.toLowerCase();
     const meetsPrice = p.price >= minPrice && p.price <= maxPrice;
-
     const meetsRating = rating >= minRating;
-
     const meetsSearch = p.title.toLowerCase().includes(search.toLowerCase());
-
     const meetsDiscount = discountFilter ? count > 200 : true;
 
     return meetsCategory && meetsPrice && meetsRating && meetsSearch && meetsDiscount;
@@ -66,181 +66,184 @@ export default function CategoryPage() {
     setDiscountFilter(false);
   };
 
-  return (
-    <Box sx={{ display: "flex", mt: 10, p: 3 }}>
-
-      <Paper
+  const FilterContent = (
+    <Box sx={{ p: { xs: 1, md: 0 } }}>
+      <Typography variant="h6" fontWeight={700}>Filters</Typography>
+      <Divider sx={{ my: 2 }} />
+      <Typography fontWeight={600} mb={1}>Search</Typography>
+      <TextField
+        fullWidth
+        size="small"
+        placeholder="Search products..."
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+      />
+      <Divider sx={{ my: 2 }} />
+      <Typography fontWeight={600}>Price Range</Typography>
+      <Slider
+        sx={{ color: mode === "light" ? "black" : "white" }}
+        value={[minPrice, maxPrice]}
+        onChange={(_, v: any) => { setMinPrice(v[0]); setMaxPrice(v[1]); }}
+        min={10}
+        max={2000}
+      />
+      <Typography>₹{minPrice} – ₹{maxPrice}</Typography>
+      <Divider sx={{ my: 2 }} />
+      <Typography fontWeight={600} mb={1}>Minimum Rating</Typography>
+      <Rating value={minRating} onChange={(_, v) => setMinRating(v || 0)} />
+      <Divider sx={{ my: 2 }} />
+      <FormControlLabel
+        control={<Checkbox checked={discountFilter} onChange={(e) => setDiscountFilter(e.target.checked)} />}
+        label="High demand items"
+      />
+      <Divider sx={{ my: 2 }} />
+      <Button
+        variant="contained"
+        fullWidth
+        onClick={() => { resetFilters(); setMobileFilterOpen(false); }}
         sx={{
-          width: { xs: "90", md: 250 },
-          p: 3,
           borderRadius: 2,
-          height: "100vh",
-          position: "sticky",
-          top: 90,
-          boxShadow: 4,
-          background: mode === "light" ? "#fff" : "black",
-        }}>
-        <Typography variant="h6" fontWeight={700}>
-          Filters
-        </Typography>
+          bgcolor: mode === "light" ? "black" : "white",
+          color: mode === "light" ? "white" : "black",
+          mt: 2,
+          textTransform: 'none'
+        }}
+      >
+        Reset Filters
+      </Button>
+    </Box>
+  );
 
-        <Divider sx={{ my: 2 }} />
+  return (
+    <Box 
+      sx={{ 
+        display: "flex", 
+        flexDirection: { xs: "column", md: "row" }, 
+        pt: { xs: 8, md: 12 }, 
+        px: { xs: 2, md: 4 }, 
+        gap: 4 
+      }}
+    >
+      
+      <Box sx={{ display: { xs: "none", md: "block" }, width: 280, position: "sticky", top: 100, height: "fit-content" }}>
+        <Paper sx={{ p: 3, borderRadius: 3, bgcolor: mode === "light" ? "#fff" : "#121212" }} elevation={0} variant="outlined">
+          {FilterContent}
+        </Paper>
+      </Box>
 
-        <Typography fontWeight={600} sx={{ mb: 1 }}>
-          Search
-        </Typography>
-        <TextField
-          fullWidth
-          size="small"
-          placeholder="Search products..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}/>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography fontWeight={600}>Price Range</Typography>
-        <Slider sx={{ color: mode === "light" ? "black" : "white"}}
-          value={[minPrice, maxPrice]}
-          onChange={(e, v: any) => {
-            setMinPrice(v[0]);
-            setMaxPrice(v[1]);
-          }}
-          min={10}
-          max={2000}/>
-        <Typography>
-          ₹{minPrice} – ₹{maxPrice}
-        </Typography>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography fontWeight={600} sx={{ mb: 1 }}>
-          Minimum Rating
-        </Typography>
-        <Rating
-          value={minRating}
-          onChange={(e, v) => setMinRating(v || 0)}/>
-
-        <Divider sx={{ my: 2 }} />
-
-        <FormControlLabel
-          control={
-            <Checkbox
-              checked={discountFilter}
-              onChange={(e) => setDiscountFilter(e.target.checked)}/>
-          }
-          label="High demand items"/>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Typography fontWeight={600} sx={{ mb: 1 }}>
-          Sort By
-        </Typography>
-
-        <TextField
-          select
-          SelectProps={{ native: true }}
-          size="small"
-          fullWidth
-          value={sortType}
-          onChange={(e) => setSortType(e.target.value)}>
-          <option value="none">Featured</option>
-          <option value="low">Price: Low to High</option>
-          <option value="high">Price: High to Low</option>
-          <option value="newest">Newest First</option>
-          <option value="az">A → Z</option>
-        </TextField>
-
-        <Divider sx={{ my: 2 }} />
-
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={resetFilters}
-          sx={{ textTransform: "none", borderRadius: 2,background: mode === "light" ? "black" : "white" }}>
-          Reset Filters
-        </Button>
-      </Paper>
-
-      <Box sx={{ flex: 1, ml: 3 }}>
-        <Typography variant="h5" fontWeight={700} mb={2}>
+      <Box sx={{ flex: 1 }}>
+        <Typography 
+          variant="h5" 
+          fontWeight={800} 
+          sx={{ mb: 2, mt: { xs: 2, md: 0 } }}
+        >
           {decodedName.toUpperCase()}
         </Typography>
 
-        <Box
-          sx={{
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(150px, 1fr))",
-            gap: 2,
-          }}>
+        <Stack 
+          direction="row" 
+          spacing={1} 
+          sx={{ 
+            display: { xs: "flex", md: "none" }, 
+            mb: 3, 
+            position: 'sticky', 
+            top: 60, 
+            zIndex: 10, 
+            bgcolor: 'background.default', 
+            py: 1 
+          }}
+        >
+          <Button 
+            fullWidth 
+            variant="outlined" 
+            startIcon={<FilterListIcon />} 
+            onClick={() => setMobileFilterOpen(true)}
+            sx={{ 
+              borderRadius: '8px', 
+              textTransform: 'none', 
+              color: mode === 'light' ? 'black' : 'white', 
+              borderColor: 'divider',
+              height: '40px'
+            }}
+          >
+            Filters
+          </Button>
+          
+          <TextField
+            select
+            SelectProps={{ native: true }}
+            size="small"
+            fullWidth
+            value={sortType}
+            onChange={(e) => setSortType(e.target.value)}
+            sx={{ 
+              "& .MuiOutlinedInput-root": { borderRadius: '8px', height: '40px' } 
+            }}
+          >
+            <option value="none">Sort By</option>
+            <option value="low">Price: Low-High</option>
+            <option value="high">Price: High-Low</option>
+            <option value="newest">Newest</option>
+            <option value="az">A-Z</option>
+          </TextField>
+        </Stack>
+
+        <Box 
+          sx={{ 
+            display: "grid", 
+            gridTemplateColumns: { xs: "repeat(1, 1fr)", sm: "repeat(2, 1fr)", lg: "repeat(3, 1fr)" }, 
+            gap: 3 
+          }}
+        >
           {filtered.map((p) => (
             <Paper
               key={p.id}
-              sx={{
-                width: "100%",
-                maxWidth: 180,
-                p: 1,
-                borderRadius: 2,
-                transition: "0.2s",
-                "&:hover": {
-                    boxShadow: 6,
-                    transform: "scale(1.03)" },
-              }}>
-              <Box
-                onClick={() => navigate(`/product/${p.id}`)}
-                sx={{ cursor: "default" }}>
-                <img
-                  src={getImage(p.image)}
-                  alt={p.title}
-                  style={{
-                    width: "100%",
-                    height: 160,
-                    objectFit: "contain",
-                  }}/>
-
-                <Typography
-                  fontWeight={600}
-                  sx={{
-                    mt: 1,
-                    whiteSpace: "nowrap",
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                  }}>
+              elevation={0}
+              sx={{ 
+                p: 2, 
+                borderRadius: 3, 
+                border: '1px solid', 
+                borderColor: 'divider', 
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between'
+              }}
+            >
+              <Box onClick={() => navigate(`/product/${p.id}`)} sx={{ cursor: 'pointer' }}>
+                <img src={getImage(p.image)} alt={p.title} style={{ width: "100%", height: 200, objectFit: "contain", marginBottom: '16px' }} />
+                <Typography fontWeight={700} sx={{ mb: 1 }}>
                   {p.title}
                 </Typography>
-
-                <Typography fontWeight={700}>₹{p.price}</Typography>
-
-                <Rating
-                  value={(p as any)?.rating?.rate || 0}
-                  precision={0.5}
-                  readOnly
-                  size="small"/>
+                <Typography variant="h6" fontWeight={800}>₹{p.price}</Typography>
+                <Rating value={(p as any)?.rating?.rate || 0} precision={0.5} readOnly size="small" />
               </Box>
-
               <Button
                 variant="contained"
                 fullWidth
-                sx={{
-                  mt: 1.5,
-                  bgcolor: "black",
-                  color: "white",
-                  textTransform: "none",
-                  borderRadius: 2,
-                  fontWeight: 600,
-                }}
-                onClick={() => navigate(`/product/${p.id}?buynow=true`)}>
-                Buy Now
+                sx={{ mt: 2, bgcolor: "black", color: "white", borderRadius: 2, fontWeight: 700, textTransform: 'none' }}
+                onClick={() => navigate(`/product/${p.id}?buynow=true`)}
+              >
+                BUY NOW
               </Button>
             </Paper>
           ))}
         </Box>
-
-        {filtered.length === 0 && (
-          <Typography sx={{ mt: 5, opacity: 0.6 }}>
-            No products match your filters.
-          </Typography>
-        )}
       </Box>
+      <Drawer
+        anchor="bottom"
+        open={mobileFilterOpen}
+        onClose={() => setMobileFilterOpen(false)}
+        PaperProps={{ 
+          sx: { 
+            borderTopLeftRadius: 20, 
+            borderTopRightRadius: 20, 
+            p: 3, 
+            maxHeight: '70vh' 
+          } 
+        }}
+      >
+        {FilterContent}
+      </Drawer>
     </Box>
   );
 }

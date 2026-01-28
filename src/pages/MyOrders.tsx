@@ -10,7 +10,8 @@ export default function MyOrders() {
   const navigate = useNavigate();
 
   return (
-    <Box sx={{ p: 3, mt: 8,maxWidth: 900, mx: "auto" }}>
+    <Box sx={{mt:{xs:8,md:0}, maxWidth: 900, mx: "auto",px: { xs: 1.5, sm: 3 },
+        pt: { xs: 10, md: 12 } }}>
       <Typography variant="h5" fontWeight={700} mb={3}>
         My Orders
       </Typography>

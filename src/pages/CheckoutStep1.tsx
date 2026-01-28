@@ -28,13 +28,12 @@ export default function CheckoutStep1() {
   };
 
   return (
-    <Box sx={{ p: 3, mt: "40px", display: "flex", justifyContent: "center" }}>
-      
+    <Box sx={{ px: { xs: 1.5, sm: 3 },
+        pt: { xs: 12, md: 8 }, display: "flex", justifyContent: "center" }}>
       
       <Box sx={{ width: "100%", maxWidth: "1100px" }}>
         
         <CheckoutSteps step={1} />
-
         <Typography fontWeight={700} mb={2} sx={{ fontSize: 18 }}>
           Select Address
         </Typography>
