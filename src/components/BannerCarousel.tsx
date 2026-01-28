@@ -20,7 +20,7 @@ export default function BannerCarousel() {
       setIndex((p) => (p + 1) % images.length);
     }, 3000);
     return () => clearInterval(t);
-  }, []);
+  }, [images.length]);
 
   return (
     <Box
