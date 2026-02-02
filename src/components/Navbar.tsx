@@ -94,7 +94,7 @@ export default function Navbar() {
             minHeight: 68,
           }}
         >
-          {/* MOBILE LEFT ICONS */}
+  
           <Box sx={{ display: { xs: "flex", md: "none" }, alignItems: "center", gap: 1 }}>
             <IconButton onClick={() => setMobileOpen(true)}>
               <MenuIcon />
@@ -113,7 +113,6 @@ export default function Navbar() {
             </IconButton>
           </Box>
 
-          {/* LOGO */}
           <Typography
             variant="h5"
             fontFamily="fantasy"
@@ -124,7 +123,6 @@ export default function Navbar() {
             MyShop
           </Typography>
 
-          {/* SEARCH – DESKTOP */}
           <Box
             sx={{
               display: { xs: "none", md: "block" },
@@ -183,7 +181,6 @@ export default function Navbar() {
             )}
           </Box>
 
-          {/* DESKTOP ICONS */}
           <Box
             sx={{
               display: { xs: "none", md: "flex" },
@@ -219,7 +216,6 @@ export default function Navbar() {
           </Box>
         </Toolbar>
 
-        {/* MOBILE SEARCH */}
         <Box sx={{ display: { xs: "block", md: "none" }, px: 2, pb: 1 }}>
           <Box
             sx={{
@@ -242,7 +238,6 @@ export default function Navbar() {
         </Box>
       </AppBar>
 
-      {/* DRAWER (wishlist & cart REMOVED) */}
       <Drawer
         anchor="left"
         open={mobileOpen}
@@ -285,7 +280,6 @@ export default function Navbar() {
         </List>
       </Drawer>
 
-      {/* PROFILE MENU */}
       <Menu
         anchorEl={profileAnchor}
         open={Boolean(profileAnchor)}
