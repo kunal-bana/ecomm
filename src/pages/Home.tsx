@@ -45,6 +45,7 @@ export default function Home() {
       sx={{
         width: "100%",
         p: { xs: 1, md: 2 },
+        mt:{ xs: 8, md: 0},
         overflowX: "hidden",
       }}>
       <BannerCarousel />

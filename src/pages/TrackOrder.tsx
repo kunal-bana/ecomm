@@ -34,7 +34,8 @@ export default function TrackOrder() {
   );
 
   return (
-    <Box sx={{ p: 3, mt: 10 }}>
+    <Box sx={{ p: 3, mt:{ xs: 8,md:2} ,px: { xs: 1.5, md: 4 },
+        pt: { xs: 10 } }}>
       <Typography variant="h5" fontWeight={700} mb={3}>
         Track Order #{order.id}
       </Typography>
