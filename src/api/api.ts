@@ -1,9 +1,11 @@
-const BASE_URL = "/api";
+const BASE_URL = "https://fakestoreapi.com";
 
 export const apiGetAllProducts = async () => {
   const res = await fetch(`${BASE_URL}/products`);
 
-  if (!res.ok) throw new Error("Failed");
+  if (!res.ok) {
+    throw new Error(`Error ${res.status}`);
+  }
 
   return res.json();
 };
