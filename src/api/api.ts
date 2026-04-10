@@ -1,17 +1,11 @@
-const BASE_URL = "https://fakestoreapi.com";
+const BASE_URL = "/api";
 
 export const apiGetAllProducts = async () => {
-  try {
-    const res = await fetch(`${BASE_URL}/products`);
+  const res = await fetch(`${BASE_URL}/products`);
 
-    if (!res.ok) {
-      throw new Error(`Error ${res.status}`);
-    }
+  if (!res.ok) throw new Error("Failed");
 
-    return await res.json();
-  } catch (error: any) {
-    throw error; 
-  }
+  return res.json();
 };
 
 export const apiGetProductById = async (id: number | string) => {
