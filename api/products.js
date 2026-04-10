@@ -1,10 +1,15 @@
 export default async function handler(req, res) {
   try {
-    const response = await fetch("https://fakestoreapi.com/products");
+    const response = await fetch("https://fakestoreapi.com/products", {
+      headers: {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "Accept": "application/json",
+      },
+    });
 
     if (!response.ok) {
       return res.status(response.status).json({
-        error: "External API failed",
+        error: `External API failed with ${response.status}`,
       });
     }
 
